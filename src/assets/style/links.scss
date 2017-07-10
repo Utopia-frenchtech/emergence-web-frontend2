@@ -1,0 +1,16 @@
+a {
+    color: #222222;
+    font-style: italic;
+    text-decoration: none;
+    font-weight: bold;
+    &:link{
+    }
+    &:visited{
+    }
+    &:hover{
+        color: #555555;
+    }
+    &:active{
+        color: #888888;
+    }
+}

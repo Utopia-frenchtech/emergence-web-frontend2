@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../../">
+  <title data-ice="title">src/services/API/Axios.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">config/i18n</div><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-currentLocale">currentLocale</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-i18nConfig">i18nConfig</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">config/vuex</div><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-store">store</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">helpers</div><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-groupByDay">groupByDay</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-humanizeDate">humanizeDate</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-humanizeTime">humanizeTime</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">services/API</div><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Socket">Socket</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Axios">Axios</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-emergence">emergence</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-message">message</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/services/API/Axios.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
+ * Axios is an helper for HTTP request.
+ * In this file we setup the default config, mainly authentication,
+ * interceptors (to handle all API errors for example) and headers.
+ * @see https://github.com/mzabriskie/axios
+ */
+import axios from &apos;axios&apos;
+import i18n from &apos;@/config/i18n&apos;
+import toastr from &apos;toastr&apos;
+
+export const Axios = axios.create({
+  baseURL: &apos;&apos;, // web server ip (not chatscript !)
+  headers: {
+    &apos;Accept&apos;: &apos;application/json&apos;,
+    &apos;Content-Type&apos;: &apos;application/json&apos;
+  },
+  params: {
+    // NOTE : we use JWT auth for the sake of simplicity, though OAUTH may be safer in the long run (but more complex to implement)
+    token: localStorage.getItem(&apos;token&apos;) // we always provide the auth token
+  }
+})
+// Add a response interceptor to handle errors
+Axios.interceptors.response.use(function (response) {
+    // Do something with response data
+  return response
+}, function (error) {
+    // Do something with response error
+    // trigger a toaster on error
+  toastr.options = {
+    &apos;closeButton&apos;: true,
+    &apos;debug&apos;: false,
+    &apos;newestOnTop&apos;: true,
+    &apos;progressBar&apos;: false,
+    &apos;positionClass&apos;: &apos;toast-bottom-center&apos;,
+    &apos;preventDuplicates&apos;: false,
+    &apos;onclick&apos;: null,
+    &apos;showDuration&apos;: &apos;300&apos;,
+    &apos;hideDuration&apos;: &apos;500&apos;,
+    &apos;timeOut&apos;: &apos;3000&apos;,
+    &apos;extendedTimeOut&apos;: &apos;1000&apos;,
+    &apos;showEasing&apos;: &apos;swing&apos;,
+    &apos;hideEasing&apos;: &apos;linear&apos;,
+    &apos;showMethod&apos;: &apos;fadeIn&apos;,
+    &apos;hideMethod&apos;: &apos;fadeOut&apos;
+  }
+  toastr.error(i18n.t(&apos;services.api.error.message&apos;), i18n.t(&apos;services.api.error.title&apos;))
+  return Promise.reject(error)
+})
+
+export default Axios
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.5.2)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

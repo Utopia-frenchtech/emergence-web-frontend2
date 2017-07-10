@@ -1,0 +1,9 @@
+ul{
+    &.horizontal {
+        list-style-type: none;
+        li {
+            display: inline;
+            margin: 4px;
+        }
+    }
+}

@@ -1,0 +1,1221 @@
+[
+  {
+    "__docId__": 0,
+    "kind": "file",
+    "name": "src/config/i18n/index.js",
+    "content": "/**\n * Internationalization configuration\n * @type {[type]}\n */\nimport Vue from 'vue'\nimport VueI18n from 'vue-i18n'\nimport moment from 'moment/min/moment-with-locales'\n\nimport locales from '@/assets/locales'\n\nVue.use(VueI18n)\n\n// setup date locale\nexport const currentLocale = window.navigator.userLanguage || window.navigator.language\nmoment.locale(currentLocale)\n\n// i18n config\nexport const i18nConfig = new VueI18n({\n  locale: currentLocale,\n  messages: locales,\n  fallbackLocale: 'en',\n})\nexport default i18nConfig\n",
+    "static": true,
+    "longname": "src/config/i18n/index.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 1,
+    "kind": "variable",
+    "name": "currentLocale",
+    "memberof": "src/config/i18n/index.js",
+    "static": true,
+    "longname": "src/config/i18n/index.js~currentLocale",
+    "access": null,
+    "export": true,
+    "importPath": "emergence/src/config/i18n/index.js",
+    "importStyle": "{currentLocale}",
+    "description": null,
+    "lineNumber": 14,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 2,
+    "kind": "variable",
+    "name": "i18nConfig",
+    "memberof": "src/config/i18n/index.js",
+    "static": true,
+    "longname": "src/config/i18n/index.js~i18nConfig",
+    "access": null,
+    "export": true,
+    "importPath": "emergence/src/config/i18n/index.js",
+    "importStyle": "{i18nConfig}",
+    "description": null,
+    "lineNumber": 18,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "vue-i18n~VueI18n"
+      ]
+    }
+  },
+  {
+    "__docId__": 3,
+    "kind": "file",
+    "name": "src/config/vuex/store.js",
+    "content": "/**\n * Vuex store config\n */\nimport Vuex from 'vuex'\nimport Vue from 'vue'\nimport localStorageHelpers from '@/helpers/localStorageHelpers'\n\nVue.use(Vuex)\n\nconst storeConfig = {\n  state: {\n    user: localStorageHelpers.getJSONItem('user'),\n    userId: localStorage.getItem('userId'),\n    showLeftMenu: false,\n    exp: localStorageHelpers.getJSONItem('exp') || { exp: 0, total: 100, level: 0 },\n    color: '#DFCEBC',\n  },\n  mutations: {\n    updateUser (state, user) {\n      state.user = user\n    },\n    clearUser (state) {\n      state.user = null\n      state.userId = null\n    },\n    updateExp (state, exp) {\n      state.exp = exp\n    },\n    updateUserId (state, userId) {\n      state.userId = userId\n    },\n    updateColor (state, color) {\n      state.color = color\n    },\n    closeLeftMenu (state) {\n      state.showLeftMenu = false\n    },\n    toggleLeftMenu (state) {\n      state.showLeftMenu = !state.showLeftMenu\n    }\n  },\n  getters: {\n    isLoggedIn: state => !!state.user\n  }\n}\nexport const store = new Vuex.Store(storeConfig)\nexport default store\n",
+    "static": true,
+    "longname": "src/config/vuex/store.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 4,
+    "kind": "variable",
+    "name": "storeConfig",
+    "memberof": "src/config/vuex/store.js",
+    "static": true,
+    "longname": "src/config/vuex/store.js~storeConfig",
+    "access": null,
+    "export": false,
+    "importPath": "emergence/src/config/vuex/store.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 10,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "{\"state\": *, \"mutations\": *, \"getters\": *}"
+      ]
+    }
+  },
+  {
+    "__docId__": 5,
+    "kind": "variable",
+    "name": "store",
+    "memberof": "src/config/vuex/store.js",
+    "static": true,
+    "longname": "src/config/vuex/store.js~store",
+    "access": null,
+    "export": true,
+    "importPath": "emergence/src/config/vuex/store.js",
+    "importStyle": "{store}",
+    "description": null,
+    "lineNumber": 46,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 6,
+    "kind": "file",
+    "name": "src/helpers/chatHelpers.js",
+    "content": "import _ from 'lodash'\nimport moment from 'moment'\n/**\n * Group messages by day\n * @param  {Array<Message>} messages [description]\n * @return {{[day: string]: Array<Message>}}          [description]\n */\nexport const groupByDay = (messages) => _.groupBy(messages, (message) => (\n  moment(message.createdAt).startOf('day') // 24/12 19:37 becomes 24/12 00:00, so we get messages for each day\n  .toISOString()\n))\n\n/**\n * For old messages, returns the date. For recent messages, returns the day,\n * for today, return 'Today'\n * @param  {*} date [description]\n * @return {*}      [description]\n */\nexport const humanizeDate = (date) => {\n  const momentDate = moment(date)\n  const now = moment()\n  const dayDiff = now.diff(momentDate, 'days')\n  if (dayDiff < 2) {\n    return momentDate.calendar().split(' ')[0] // trick to get today and yesterday in a localized way\n  } else if (dayDiff < 7) {\n    return momentDate.format('dddd')\n  } else {\n    return momentDate.format('ll')\n  }\n}\n\n/**\n * @param  {*} date [description]\n * @return {*}      [description]\n */\nexport const humanizeTime = (date) => {\n  const momentDate = moment(date)\n  return momentDate.format('LT')\n}\n\n// FIXME : for obscure reasons export default = module.exports does not work in dev mode\nexport default {\n  groupByDay,\n  humanizeDate,\n  humanizeTime,\n}\n",
+    "static": true,
+    "longname": "src/helpers/chatHelpers.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 7,
+    "kind": "function",
+    "name": "groupByDay",
+    "memberof": "src/helpers/chatHelpers.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/helpers/chatHelpers.js~groupByDay",
+    "access": null,
+    "export": true,
+    "importPath": "emergence/src/helpers/chatHelpers.js",
+    "importStyle": "{groupByDay}",
+    "description": "Group messages by day",
+    "lineNumber": 8,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Array<Message>"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "messages",
+        "description": "[description]"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "{[day: string]: Array<Message>}"
+      ],
+      "spread": false,
+      "description": "[description]"
+    }
+  },
+  {
+    "__docId__": 8,
+    "kind": "function",
+    "name": "humanizeDate",
+    "memberof": "src/helpers/chatHelpers.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/helpers/chatHelpers.js~humanizeDate",
+    "access": null,
+    "export": true,
+    "importPath": "emergence/src/helpers/chatHelpers.js",
+    "importStyle": "{humanizeDate}",
+    "description": "For old messages, returns the date. For recent messages, returns the day,\nfor today, return 'Today'",
+    "lineNumber": 19,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "*"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "date",
+        "description": "[description]"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "*"
+      ],
+      "spread": false,
+      "description": "[description]"
+    }
+  },
+  {
+    "__docId__": 9,
+    "kind": "function",
+    "name": "humanizeTime",
+    "memberof": "src/helpers/chatHelpers.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/helpers/chatHelpers.js~humanizeTime",
+    "access": null,
+    "export": true,
+    "importPath": "emergence/src/helpers/chatHelpers.js",
+    "importStyle": "{humanizeTime}",
+    "description": "",
+    "lineNumber": 36,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "*"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "date",
+        "description": "[description]"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "*"
+      ],
+      "spread": false,
+      "description": "[description]"
+    }
+  },
+  {
+    "__docId__": 10,
+    "kind": "file",
+    "name": "src/helpers/fakeData.js",
+    "content": "// @see http://marak.github.io/faker.js/\nimport faker from 'faker'\nexport default {\n  message: (options) => ({\n    content: faker.lorem.paragraph(),\n    createdAt: (options && options.createdAt) || faker.date.past(),\n    sender: {\n      id: (options && options.id) || faker.random.uuid(),\n      name: faker.name.firstName() + ' ' + faker.name.lastName()\n    }\n  })\n}\n",
+    "static": true,
+    "longname": "src/helpers/fakeData.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 11,
+    "kind": "file",
+    "name": "src/helpers/localStorageHelpers.js",
+    "content": "export default {\n  /**\n   * Get a localStorage as an object\n   * @param  {*} key [description]\n   * @return {*}     [description]\n   */\n  getJSONItem: (key) => JSON.parse(localStorage.getItem(key)),\n  setJSONItem: (key, object) => localStorage.setItem(key, JSON.stringify(object)),\n}\n",
+    "static": true,
+    "longname": "src/helpers/localStorageHelpers.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 12,
+    "kind": "file",
+    "name": "src/helpers/stringHelpers.js",
+    "content": "export default {\n  isEmpty: (string) => !string || !string.length,\n  isLonger: (string, value) => string && string.length > value,\n  isSmaller: (string, value) => string && string.length < value,\n}\n",
+    "static": true,
+    "longname": "src/helpers/stringHelpers.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 13,
+    "kind": "file",
+    "name": "src/main.js",
+    "content": "// The Vue build version to load with the `import` command\n// (runtime-only or standalone) has been set in webpack.base.conf with an alias.\nimport Vue from 'vue'\nimport App from './App'\nimport router from './router'\nimport store from '@/config/vuex/store'\nimport i18nConfig from '@/config/i18n'\n\nVue.config.productionTip = false\n\n/* eslint-disable no-new */\nnew Vue({\n  el: '#app',\n  router,\n  store,\n  i18n: i18nConfig,\n  template: '<App/>',\n  components: { App }\n})\n",
+    "static": true,
+    "longname": "src/main.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 14,
+    "kind": "file",
+    "name": "src/router/index.js",
+    "content": "import Vue from 'vue'\nimport Router from 'vue-router'\nimport ChatPage from '@/components/chat/ChatPage'\nimport UserPage from '@/components/user/UserPage'\nimport Login from '@/components/user/Login'\nimport Signup from '@/components/user/Signup'\nimport Logout from '@/components/user/Logout'\nimport Account from '@/components/user/Account'\nimport LegalTerms from '@/components/info/LegalTerms'\n\nVue.use(Router)\n\nconst routes = [\n  {\n    name: 'Chat',\n    path: '/',\n    component: ChatPage,\n  }, {\n    name: 'User',\n    path: '/user',\n    component: UserPage,\n    children: [\n      {\n        name: 'Login',\n        path: 'login',\n        component: Login,\n      },\n      {\n        name: 'Signup',\n        path: 'signup',\n        component: Signup,\n      },\n      {\n        name: 'Account',\n        path: 'account',\n        component: Account,\n      },\n      {\n        name: 'Logout',\n        path: 'logout',\n        component: Logout,\n      },\n    ]\n  }, {\n    name: 'LegalTerms',\n    path: '/legal-terms',\n    component: LegalTerms,\n  }\n]\n\nexport default new Router({ routes })\n",
+    "static": true,
+    "longname": "src/router/index.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 15,
+    "kind": "variable",
+    "name": "routes",
+    "memberof": "src/router/index.js",
+    "static": true,
+    "longname": "src/router/index.js~routes",
+    "access": null,
+    "export": false,
+    "importPath": "emergence/src/router/index.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 13,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "undefined[]"
+      ]
+    }
+  },
+  {
+    "__docId__": 16,
+    "kind": "file",
+    "name": "src/services/API/Axios.js",
+    "content": "/**\n * Axios is an helper for HTTP request.\n * In this file we setup the default config, mainly authentication,\n * interceptors (to handle all API errors for example) and headers.\n * @see https://github.com/mzabriskie/axios\n */\nimport axios from 'axios'\nimport i18n from '@/config/i18n'\nimport toastr from 'toastr'\n\nexport const Axios = axios.create({\n  baseURL: '', // web server ip (not chatscript !)\n  headers: {\n    'Accept': 'application/json',\n    'Content-Type': 'application/json'\n  },\n  params: {\n    // NOTE : we use JWT auth for the sake of simplicity, though OAUTH may be safer in the long run (but more complex to implement)\n    token: localStorage.getItem('token') // we always provide the auth token\n  }\n})\n// Add a response interceptor to handle errors\nAxios.interceptors.response.use(function (response) {\n    // Do something with response data\n  return response\n}, function (error) {\n    // Do something with response error\n    // trigger a toaster on error\n  toastr.options = {\n    'closeButton': true,\n    'debug': false,\n    'newestOnTop': true,\n    'progressBar': false,\n    'positionClass': 'toast-bottom-center',\n    'preventDuplicates': false,\n    'onclick': null,\n    'showDuration': '300',\n    'hideDuration': '500',\n    'timeOut': '3000',\n    'extendedTimeOut': '1000',\n    'showEasing': 'swing',\n    'hideEasing': 'linear',\n    'showMethod': 'fadeIn',\n    'hideMethod': 'fadeOut'\n  }\n  toastr.error(i18n.t('services.api.error.message'), i18n.t('services.api.error.title'))\n  return Promise.reject(error)\n})\n\nexport default Axios\n",
+    "static": true,
+    "longname": "src/services/API/Axios.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 17,
+    "kind": "variable",
+    "name": "Axios",
+    "memberof": "src/services/API/Axios.js",
+    "static": true,
+    "longname": "src/services/API/Axios.js~Axios",
+    "access": null,
+    "export": true,
+    "importPath": "emergence/src/services/API/Axios.js",
+    "importStyle": "{Axios}",
+    "description": null,
+    "lineNumber": 11,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 18,
+    "kind": "file",
+    "name": "src/services/API/Socket.js",
+    "content": "/**\n * A socket helper, based on WebSocket.\n *\n * This plays a similar role as Axios for HTTP, but for sockets : it establishes\n * the connection with the chat script server.\n *\n * However, the chatscript server does not seem to respond to requests...\n * @type {*}\n */\n// Papa for testing :  ec2-52-32-99-159.us-west-2.compute.amazonaws.com\n// Maman for prod : ec2-52-35-6-213.us-west-2.compute.amazonaws.com 52.35.6.213\nconst port = 1024\nexport const Socket = () => new Promise((resolve, reject) => {\n  const socket = new window.WebSocket(`ws://53.35.6.213:${port}`)\n  // called when the socket is ready to receive messages\n  socket.onopen = () => {\n    resolve(socket)\n  }\n  // connection error\n  socket.onerror = (err) => {\n    reject(err)\n  }\n})\n\nexport default Socket\n",
+    "static": true,
+    "longname": "src/services/API/Socket.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 19,
+    "kind": "variable",
+    "name": "port",
+    "memberof": "src/services/API/Socket.js",
+    "static": true,
+    "longname": "src/services/API/Socket.js~port",
+    "access": null,
+    "export": false,
+    "importPath": "emergence/src/services/API/Socket.js",
+    "importStyle": null,
+    "description": "A socket helper, based on WebSocket.\n\nThis plays a similar role as Axios for HTTP, but for sockets : it establishes\nthe connection with the chat script server.\n\nHowever, the chatscript server does not seem to respond to requests...",
+    "lineNumber": 12,
+    "type": {
+      "nullable": null,
+      "types": [
+        "*"
+      ],
+      "spread": false,
+      "description": null
+    }
+  },
+  {
+    "__docId__": 20,
+    "kind": "function",
+    "name": "Socket",
+    "memberof": "src/services/API/Socket.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/services/API/Socket.js~Socket",
+    "access": null,
+    "export": true,
+    "importPath": "emergence/src/services/API/Socket.js",
+    "importStyle": "{Socket}",
+    "description": null,
+    "lineNumber": 13,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "params": []
+  },
+  {
+    "__docId__": 21,
+    "kind": "file",
+    "name": "src/services/API/emergence.js",
+    "content": "/**\n * Requests related to the interface gamification, experience for example\n */\nimport Axios from './Axios'\nimport store from '@/config/vuex/store'\nimport localStorageHelpers from '@/helpers/localStorageHelpers'\n\n// TODO : remove this when using the real API\nlet exp = 0\nexport const emergence = {\n  /**\n  * Get the current user experience\n  * @return {*} [description]\n  */\n  getExp: () => {\n    return new Promise((resolve, reject) => {\n      exp = (exp + 5)\n      const newExp = {\n        current: exp % 100,\n        total: 100,\n        level: Math.floor(exp / 100),\n      }\n      localStorageHelpers.setJSONItem('exp', newExp)\n      store.commit('updateExp', newExp)\n      resolve(newExp)\n    })\n  },\n  _getExp: () => {\n    return Axios.get('/experience')\n    .then((res) => {\n      return res.data\n    })\n  }\n}\n\nexport default emergence\n",
+    "static": true,
+    "longname": "src/services/API/emergence.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 22,
+    "kind": "variable",
+    "name": "exp",
+    "memberof": "src/services/API/emergence.js",
+    "static": true,
+    "longname": "src/services/API/emergence.js~exp",
+    "access": null,
+    "export": false,
+    "importPath": "emergence/src/services/API/emergence.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "number"
+      ]
+    }
+  },
+  {
+    "__docId__": 23,
+    "kind": "variable",
+    "name": "emergence",
+    "memberof": "src/services/API/emergence.js",
+    "static": true,
+    "longname": "src/services/API/emergence.js~emergence",
+    "access": null,
+    "export": true,
+    "importPath": "emergence/src/services/API/emergence.js",
+    "importStyle": "{emergence}",
+    "description": null,
+    "lineNumber": 10,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "{\"getExp\": *, \"_getExp\": *}"
+      ]
+    }
+  },
+  {
+    "__docId__": 24,
+    "kind": "file",
+    "name": "src/services/API/index.js",
+    "content": "/**\n * The API.\n *\n * For the moment, there are two types of methods:\n * - placeholders that return fake data and allow to test the frontend without a baackend\n * - methods starting with a '_' : they are the real method meant to be used when the backend is ready\n *\n * So when we are ready to connect to the backend, we simply need to rename all methods in the API folder, the\n * app will work exactly the same way.\n */\nimport message from './message'\nimport user from './user'\nimport emergence from './emergence'\n\nexport default {\n  message,\n  user,\n  emergence,\n}\n",
+    "static": true,
+    "longname": "src/services/API/index.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 25,
+    "kind": "file",
+    "name": "src/services/API/message.js",
+    "content": "/**\n * Requests related to the chatbot\n */\nimport Axios from './Axios'\nimport Socket from './Socket'\nimport faker from 'faker'\n\n// we need the nul char to construct a message readable by the chatbot\nconst nul = '\\x00'\nexport const message = {\n  /**\n   * Post a message to the REST API\n   *\n   * @param  {*} sender    [description]\n   * @param  {*} content   [description]\n   * @param  {*} createdAt [description]\n   * @return {*}           [description]\n   */\n  post: ({ sender, content, createdAt }) => {\n    return new Promise((resolve, reject) => {\n      resolve(\n        {\n          sender: {\n            id: '-1',\n            name: 'Altaï',\n            isBot: true,\n          },\n          content: faker.lorem.sentence(),\n          createAt: (new Date()).toISOString(),\n        }\n        )\n    })\n  },\n  /**\n   * A proof of concept with sockets.\n   *\n   * Chatscript server works with socket, so in theory we can discuss with\n   * it directly, without needing any intermediate server.\n   *\n   * |client| --- socket connection  ------------> |Chatscript server|\n   *\n   * We can then listen for an answer and close the request.\n   *\n   * @param  {*} sender    [description]\n   * @param  {*} content   [description]\n   * @param  {*} createdAt [description]\n   * @return {*}           [description]\n   */\n  _post: ({ sender, content, createdAt }) => {\n    const message = sender.id + nul + '' + nul + content // sender id, nul, bot name or nul, nul, message\n    return Socket().then((socket) => new Promise((resolve, reject) => {\n      socket.onmessage = function (evt) {\n        // build a structured message from the chatbot answer\n        const altaiResponse = {\n          sender: {\n            id: '-1',\n            name: 'Altaï',\n            isBot: true,\n          },\n          content: evt.data,\n          createAt: (new Date()).toISOstring(),\n        }\n        resolve(altaiResponse)\n      }\n      // Web Socket is connected, send data using send()\n      socket.send(message)\n    }))\n  },\n  /**\n   * A proof of concept with an intermediate server. If the socket communication, does not work,\n   * we can work this way :\n   *\n   * |client| --- HTTP request --->  |REST API server| --- socket ---> |Chatscript server|\n   *\n   * client --- api.message.post -----------> chatbot server\n   * @param  {*} sender    [description]\n   * @param  {*} content   [description]\n   * @param  {*} createdAt [description]\n   * @return {*}           [description]\n   */\n  _HTTPpost: ({ sender, content, createdAt }) => {\n    return Axios.post('/message', message)\n    .then((res) => {\n      // TODO : this should already be done by the API, so we won't need this post-process block\n      return {\n        sender: {\n          id: '-1',\n          name: 'Altaï',\n          isBot: true,\n        },\n        content: res.data,\n        createdAt: (new Date()).toISOString(),\n      }\n    })\n  },\n  /**\n   * Get the previous exchanges.\n   *\n   * Chatscript does not provide a RESTFul API, so we need to rely on an intermediate\n   * server that stores messages to a DB.\n   *\n   * @param  {number} page    The page, STARTING FROM 1\n   * @param  {number} perPage The number of item we want per page\n   * @return {*}         An array of messages\n   */\n  // get the previous messages\n  _get: ({ page, perPage }) => (\n    Axios.get('/messages', {\n      page,\n      perPage,\n    })\n  )\n}\n\nexport default message\n",
+    "static": true,
+    "longname": "src/services/API/message.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 26,
+    "kind": "variable",
+    "name": "nul",
+    "memberof": "src/services/API/message.js",
+    "static": true,
+    "longname": "src/services/API/message.js~nul",
+    "access": null,
+    "export": false,
+    "importPath": "emergence/src/services/API/message.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "string"
+      ]
+    }
+  },
+  {
+    "__docId__": 27,
+    "kind": "variable",
+    "name": "message",
+    "memberof": "src/services/API/message.js",
+    "static": true,
+    "longname": "src/services/API/message.js~message",
+    "access": null,
+    "export": true,
+    "importPath": "emergence/src/services/API/message.js",
+    "importStyle": "{message}",
+    "description": null,
+    "lineNumber": 10,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "{\"post\": *, \"_post\": *, \"_HTTPpost\": *, \"_get\": *}"
+      ]
+    }
+  },
+  {
+    "__docId__": 29,
+    "kind": "external",
+    "name": "Infinity",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Infinity",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Infinity",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 30,
+    "kind": "external",
+    "name": "NaN",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NaN",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~NaN",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 31,
+    "kind": "external",
+    "name": "undefined",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~undefined",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 32,
+    "kind": "external",
+    "name": "null",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~null",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 33,
+    "kind": "external",
+    "name": "Object",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Object",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 34,
+    "kind": "external",
+    "name": "object",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~object",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 35,
+    "kind": "external",
+    "name": "Function",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Function",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 36,
+    "kind": "external",
+    "name": "function",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~function",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 37,
+    "kind": "external",
+    "name": "Boolean",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Boolean",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 38,
+    "kind": "external",
+    "name": "boolean",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~boolean",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 39,
+    "kind": "external",
+    "name": "Symbol",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Symbol",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 40,
+    "kind": "external",
+    "name": "Error",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Error",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 41,
+    "kind": "external",
+    "name": "EvalError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/EvalError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~EvalError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 42,
+    "kind": "external",
+    "name": "InternalError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/InternalError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~InternalError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 43,
+    "kind": "external",
+    "name": "RangeError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RangeError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~RangeError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 44,
+    "kind": "external",
+    "name": "ReferenceError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ReferenceError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~ReferenceError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 45,
+    "kind": "external",
+    "name": "SyntaxError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SyntaxError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~SyntaxError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 46,
+    "kind": "external",
+    "name": "TypeError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~TypeError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 47,
+    "kind": "external",
+    "name": "URIError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/URIError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~URIError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 48,
+    "kind": "external",
+    "name": "Number",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Number",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 49,
+    "kind": "external",
+    "name": "number",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~number",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 50,
+    "kind": "external",
+    "name": "Date",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Date",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 51,
+    "kind": "external",
+    "name": "String",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~String",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 52,
+    "kind": "external",
+    "name": "string",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~string",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 53,
+    "kind": "external",
+    "name": "RegExp",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~RegExp",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 54,
+    "kind": "external",
+    "name": "Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 55,
+    "kind": "external",
+    "name": "Int8Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int8Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Int8Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 56,
+    "kind": "external",
+    "name": "Uint8Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint8Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 57,
+    "kind": "external",
+    "name": "Uint8ClampedArray",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint8ClampedArray",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 58,
+    "kind": "external",
+    "name": "Int16Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int16Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Int16Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 59,
+    "kind": "external",
+    "name": "Uint16Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint16Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint16Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 60,
+    "kind": "external",
+    "name": "Int32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Int32Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 61,
+    "kind": "external",
+    "name": "Uint32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint32Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 62,
+    "kind": "external",
+    "name": "Float32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Float32Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 63,
+    "kind": "external",
+    "name": "Float64Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Float64Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 64,
+    "kind": "external",
+    "name": "Map",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Map",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 65,
+    "kind": "external",
+    "name": "Set",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Set",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 66,
+    "kind": "external",
+    "name": "WeakMap",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~WeakMap",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 67,
+    "kind": "external",
+    "name": "WeakSet",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~WeakSet",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 68,
+    "kind": "external",
+    "name": "ArrayBuffer",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~ArrayBuffer",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 69,
+    "kind": "external",
+    "name": "DataView",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~DataView",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 70,
+    "kind": "external",
+    "name": "JSON",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~JSON",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 71,
+    "kind": "external",
+    "name": "Promise",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Promise",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 72,
+    "kind": "external",
+    "name": "Generator",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Generator",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 73,
+    "kind": "external",
+    "name": "GeneratorFunction",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/GeneratorFunction",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~GeneratorFunction",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 74,
+    "kind": "external",
+    "name": "Reflect",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Reflect",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 75,
+    "kind": "external",
+    "name": "Proxy",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Proxy",
+    "access": null,
+    "description": "",
+    "lineNumber": 193,
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 77,
+    "kind": "external",
+    "name": "CanvasRenderingContext2D",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~CanvasRenderingContext2D",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 78,
+    "kind": "external",
+    "name": "DocumentFragment",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~DocumentFragment",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 79,
+    "kind": "external",
+    "name": "Element",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Element",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~Element",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 80,
+    "kind": "external",
+    "name": "Event",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Event",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~Event",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 81,
+    "kind": "external",
+    "name": "Node",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Node",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~Node",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 82,
+    "kind": "external",
+    "name": "NodeList",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/NodeList",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~NodeList",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 83,
+    "kind": "external",
+    "name": "XMLHttpRequest",
+    "externalLink": "https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~XMLHttpRequest",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 84,
+    "kind": "external",
+    "name": "AudioContext",
+    "externalLink": "https://developer.mozilla.org/en/docs/Web/API/AudioContext",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~AudioContext",
+    "access": null,
+    "description": "",
+    "lineNumber": 34,
+    "builtinExternal": true
+  }
+]

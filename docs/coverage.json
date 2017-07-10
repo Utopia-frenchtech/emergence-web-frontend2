@@ -1,0 +1,55 @@
+{
+  "coverage": "30%",
+  "expectCount": 10,
+  "actualCount": 3,
+  "files": {
+    "src/services/API/Axios.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        11
+      ]
+    },
+    "src/services/API/Socket.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        13
+      ]
+    },
+    "src/config/i18n/index.js": {
+      "expectCount": 2,
+      "actualCount": 0,
+      "undocumentLines": [
+        14,
+        18
+      ]
+    },
+    "src/services/API/emergence.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        10
+      ]
+    },
+    "src/helpers/chatHelpers.js": {
+      "expectCount": 3,
+      "actualCount": 3,
+      "undocumentLines": []
+    },
+    "src/services/API/message.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        10
+      ]
+    },
+    "src/config/vuex/store.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        46
+      ]
+    }
+  }
+}

@@ -1,0 +1,22 @@
+// nicer scrollbars
+div, main, aside, nav{
+    // the track in which the draggable part moves
+    &::-webkit-scrollbar-track
+    {
+        -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3);
+        border-radius: 10px;
+        background-color: rgba(#F5F5F5, 0.5);
+    }
+    // the bar
+    &::-webkit-scrollbar
+    {
+        width: 14px;
+    }
+    // the movable part
+    &::-webkit-scrollbar-thumb
+    {
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,.3);
+        background: linear-gradient(70deg, rgba(#3282b8, 0.5), rgba(#4c95b0, 0.5));
+    }
+}

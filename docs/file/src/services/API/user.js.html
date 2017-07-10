@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../../">
+  <title data-ice="title">src/services/API/user.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">config/i18n</div><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-i18nConfig">i18nConfig</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">config/vuex</div><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-store">store</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">helpers</div><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-groupByDay">groupByDay</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-humanizeDate">humanizeDate</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-humanizeTime">humanizeTime</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">services/API</div><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Socket">Socket</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Axios">Axios</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-emergence">emergence</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-message">message</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-user">user</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/services/API/user.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
+ * User related requests, mainly for authentication.
+ *
+ * Note that we may need to complete this in the futur, to handle forgotten password
+ * and email verification.
+ */
+import Axios from &apos;./Axios&apos;
+import faker from &apos;faker&apos;
+import localStorageHelpers from &apos;@/helpers/localStorageHelpers&apos;
+import store from &apos;@/config/vuex/store&apos;
+
+// TODO : fake data while the backend is not ready
+const randomId = faker.random.uuid()
+const token = faker.random.uuid()
+
+export const user = {
+  /**
+   * Returns a demo unique ID, so that the user can still test out the chat for a few days
+   * without the need to authenticate.
+   *
+   * This way we can push user to signup by allowing them to test the good part of the app
+   * without an account.
+   * @return {*} [description]
+   */
+  demo: () =&gt; (new Promise((resolve, reject) =&gt; {
+    localStorage.setItem(&apos;userId&apos;, randomId)
+    resolve({
+      id: randomId
+    })
+  })),
+  /**
+   * Login, not that we should be able to provide either the username or email for login,
+   * this is a good pattern to follow.
+   * @param  {*} email    [description]
+   * @param  {*} password [description]
+   * @return {*}          [description]
+   */
+  login: ({ email, password }) =&gt; (new Promise((resolve, reject) =&gt; {
+    const user = {
+      id: randomId,
+      name: faker.name.findName(),
+      level: 0
+    }
+    // we memorize user data throughout the app
+    localStorageHelpers.setJSONItem(&apos;user&apos;, user)
+    localStorage.setItem(&apos;userId&apos;, user.id)
+    localStorage.setItem(&apos;token&apos;, token)
+    store.commit(&apos;updateUser&apos;, user)
+    resolve(user)
+  })),
+  /**
+   * Signup
+   * @param  {*} user [description]
+   * @return {*}      [description]
+   */
+  signup: (user) =&gt; (new Promise((resolve, reject) =&gt; {
+    // we login the user too
+    user.id = randomId
+    localStorageHelpers.setJSONItem(&apos;user&apos;, user)
+    localStorage.setItem(&apos;userId&apos;, randomId)
+    localStorage.setItem(&apos;token&apos;, token)
+    store.commit(&apos;updateUser&apos;, user)
+    resolve(user)
+  })),
+  /**
+   * Update user data
+   * @param  {*} user [description]
+   * @return {*}      [description]
+   */
+  update: (user) =&gt; (new Promise((resolve, reject) =&gt; {
+    localStorageHelpers.setJSONItem(&apos;user&apos;, user)
+    store.commit(&apos;updateUser&apos;, user)
+    resolve(user)
+  })),
+  /**
+   * Logout.
+   * NOTE :  we also need to clear the localStorage ! This is very important
+   * for security reasons.
+   * @return {*} [description]
+   */
+  logout: () =&gt; (new Promise((resolve, reject) =&gt; {
+    localStorage.clear()
+    store.commit(&apos;clearUser&apos;)
+    resolve()
+  })),
+
+  _demo: () =&gt; (Axios.get(&apos;/demo-id&apos;).then((randomId) =&gt; {
+    localStorage.setItem(&apos;userId&apos;, randomId)
+    return randomId
+  })),
+  _login: ({ email, password }) =&gt; (Axios.post(&apos;/login&apos;, { email, password })
+  .then(({ token, user }) =&gt; {
+    // we memorize user data throughout the app
+    localStorageHelpers.setJSONItem(&apos;user&apos;, user)
+    localStorage.setItem(&apos;userId&apos;, user.id)
+    localStorage.setItem(&apos;token&apos;, token)
+    store.commit(&apos;updateUser&apos;, user)
+    return user
+  })),
+  _signup: (userInfo) =&gt; (Axios.post(&apos;/signup&apos;, userInfo)
+  .then(({ token, user }) =&gt; {
+    // we login the user too
+    localStorageHelpers.setJSONItem(&apos;user&apos;, user)
+    localStorage.setItem(&apos;userId&apos;, user.id)
+    localStorage.setItem(&apos;token&apos;, token)
+    store.commit(&apos;updateUser&apos;, user)
+  })),
+  _update: (user) =&gt; (Axios.post(&apos;/user/update&apos;)
+  .then((user) =&gt; {
+    localStorageHelpers.setJSONItem(&apos;user&apos;, user)
+    store.commit(&apos;updateUser&apos;, user)
+    return user
+  })),
+  _logout: () =&gt; (Axios.post(&apos;/logout&apos;)
+  .finally(() =&gt; {
+    // we clear the localStorage even when the server can&apos;t logout for security reasons
+    localStorage.clear()
+    store.commit(&apos;clearUser&apos;)
+  }))
+}
+
+export default user
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.5.2)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

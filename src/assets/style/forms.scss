@@ -1,0 +1,38 @@
+form {
+    &.big{
+        input, textarea{
+            font-size: 150%;
+            padding: 8px;
+        }
+        button {
+            font-size: 150%;
+        }
+        &.vertical{
+            input, textarea{
+                margin: 16px 0px;
+            }
+        }
+    }
+}
+
+// TODO : put this in a separate scss file in the assets folder
+button, textarea, input{
+    border: 0px solid #000;
+    &:disabled{
+        cursor: not-allowed;
+    }
+}
+input, textarea{
+    background: linear-gradient(70deg, rgba(#aaaaaa, 0.5), rgba(#999999, 0.5));
+    color: #333333;
+    // @see https://developer.mozilla.org/en-US/docs/Web/CSS/caret-color
+    caret-color: blue;
+    resize: none;
+    padding: 8px;
+}
+textarea{
+    padding: 8px;
+}
+input{
+    padding: 4px;
+}
