@@ -72,6 +72,7 @@ export default {
         address: user.address || null,
         city: user.city || null,
         zipCode: user.zipCode || null,
+        vename: user.vename || null,
       }
     },
     newUser () {
@@ -83,6 +84,7 @@ export default {
         address: this.address,
         city: this.city,
         zipCode: this.zipCode,
+        vename: this.vename,
       }
     }
   },
